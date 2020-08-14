@@ -326,5 +326,34 @@ SOLIDより一段上の粒度。ソフトウェアをコンポーネントに分
 
 #### 25章: レイヤーと境界
 - 簡単なコンピュータゲームを例に具体な話を
-- Hunt the Wumpus
+- Hunt the Wumpus (プレイヤーが簡単なテキスト入力で動くゲーム）
+  - 素朴に考えると…
+    - UIとルールの分離 ` (English|Spanish|..) UI~> Game Rule`
+    - ゲームは状態保存のコンポーネントの詳細を知らずAPIで通信 ... `Game Rule <- (Flash|Cloud) Data `
+  - 境界の軸 は複数ある。UI も言語だけでなく、通信方法（console/chat app/...)もある
+    - 抽象コンポーネントを作る
+    - `Text Delivery -> Language -> Game Rules <- Data Storage`
+      - `Text Delivery <- SMS|Console`
+      - `Language <- English|Spanish`
+      - `Data Storage <- Cloud|Flash`
+    - ゲームのルールを最上位にしてユーザからの通信・データの永続化の２つの情報の流れに大きく分かれる
+  - 情報の流れは常に２つか？
+    - マルチプレイヤーのオンラインゲームだとそうでもない
+      - `Language -> Game Rules`
+      - `Data Storage -> Game Rules`
+      - `Network -> Game Rules`
+    - さらに、ゲームルールにもマップ構造を扱う層だけでなく、プレイヤの状態を扱う上位の方針がある
+      - つまり、Game Rulesは ` Move Management -> Player Management`と分割できる
+- アーキテクチャの境界は色んな所に存在する。境界を設けるコスト・無視するコストの比較検討を随時行うよう、システムの変化に注意を払うべし
+
+#### 26章: メインコンポーネント
+- すべてのシステムに存在する、他のコンポーネントを作成・調整・監督するコンポーネント
+- 究極的な詳細（最下位レベルの方針）。
+- 以下はHunt the Wumpusの例でコードサンプルが乗ってる
+
+#### 27章: サービス
+- サービス指向アーキテクチャが流行ってる理由。…いずれも、部分的にしか正しくない
+  - サービスが互いに分離されてるように見える
+  - サービスが開発・デプロイを独立させてるように見える
+-
 
