@@ -465,7 +465,7 @@ SOLIDより一段上の粒度。ソフトウェアをコンポーネントに分
   - 22章の図を思い出す。内側をドメイン、外側をインフラストラクチャ、と二段に分けるコードベースがよく見られる。
     - 原則として、外側が内側に依存するようにする
   - これに基づいて実装を考えると…
-    - `OrderController -> | OrdersService(I/F) <- OrdersServiceImple -> Order(I/F) | <- JdbcOrdersRepository`
+    - `OrderController -> | OrdersService(I/F) <- OrdersServiceImple -> Orders(I/F) | <- JdbcOrdersRepository`
     - 登場人物はこれまでとほぼ変わらないが、OrdersRepositoryに相当する部分をビジネスロジックのコンポーネントに内包してインターフェース化。これで `Controller -> Service <- Database` という依存関係を実現
 - コードのまとめ方の例４：コンポーネントによるパッケージング
   - レイヤードアーキテクチャの三層構造、ウェブ表示にDB使いたくなったときに軽率にService部を経由せずOrdersRepositoryを利用しがち
@@ -476,4 +476,15 @@ SOLIDより一段上の粒度。ソフトウェアをコンポーネントに分
 - どの手法にしても、パッケージとしての単位や名称の差こそあれ、クラス間の矢印の向きは変わっていない。つまり、すべてのクラスをpublicにしたらどの手法にしても一緒
 - アクセス制御を厳しくできるポイント、が手法ごとに異なる。
   - 外部からの依存があるところはpublicである必要があるが、それ以外はpublicでなくてもよい
-
+  - 共通的にOrdersControllerはpublicで、加えて…
+    - レイヤードアーキ：OrdersService/OrdersRepositoryはpublic、実装クラスはpublicでない
+    - 機能によるパッケージング：OrdersControllers以外はpublicでない
+    - ポートとアダプター： OrdersService, Orders がpublic
+    - コンポーネントによるパッケージ：OrdersComponentのみpublic
+  - これらの優劣がどうという話はしてなくて、適切なクラスの権限設定を行わないとコンポーネント分割・依存関係の設計はすぐ崩れる、と言いたい
+- その他の分割方法
+  - Java9からはモジュールシステムというものがあるらしい
+  - 依存をソースコードレベルで切り離す。
+    - ポートとアダプターの例なら、`OrderController -> | OrdersService(I/F) <- OrdersServiceImple -> Orders(I/F) | <- JdbcOrdersRepository` の区切りそのまま
+      - シンプルにビジネスドメイン部・それ以外、と分けるのでも良い
+       - この場合、ウェブコントローラーからDBリポジトリを直接操作できてしまうことに注意
