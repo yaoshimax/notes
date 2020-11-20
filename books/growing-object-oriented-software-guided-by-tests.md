@@ -42,4 +42,16 @@
   - `Obj.getA().getB().setSavingFlag(true)`を一つの関数`allowSavingOfCustomisations()` にまとめることで、実装を隠蔽
 - しかし、ときに訊ねることもある
   - コレクションから情報取り出し等は尋ねざるを得ない。でも、表現力は保つこと。
-  - ``carriage.getSeats().getPercentReserved()< threshold`` は `carriage.hasSeatsAvailableWithin(threshold)` とすべし
+  - ``carriage.getSeats().getPercentReserved() < threshold`` は `carriage.hasSeatsAvailableWithin(threshold)` とすべし
+- 内部状態は極力露呈させない・外部とのやり取りを中心にせよ…を守るオブジェクトをテストするには？
+  - 隣接モジュールをモックする。テスト対象のオブジェクトだけをテストしたい＆隣接オブジェクトがどういうものかはわかっているため
+#### 第三章「ツールの紹介」
+- JUnit4
+  - `@Test` のついたメソッドをテストとして扱う
+  - `@Test(expected=例外) `で例外が出ることを期待するテストもかける
+  - `@Before` でフィクスチャ（テスト開始時点で定められた状態）をセットアップできる。 `@After` がティアダウン
+- Hamcrest
+  - オブジェクトがマッチする条件を宣言的にかける
+    - `Matcher<String> containBananas = new StringContains("banana"); assertFalse(containsBananas.matches(inputString)); ` みたいな
+    - スタティックファクトリーを用いると `assertThat(inputString, not(containString("banana")))` とかかける
+- jMock2の紹介
