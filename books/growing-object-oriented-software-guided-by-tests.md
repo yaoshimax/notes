@@ -55,3 +55,17 @@
     - `Matcher<String> containBananas = new StringContains("banana"); assertFalse(containsBananas.matches(inputString)); ` みたいな
     - スタティックファクトリーを用いると `assertThat(inputString, not(containString("banana")))` とかかける
 - jMock2の紹介
+  - `@RunWith(JMock.class)`アノテーションをつけると使える。
+  - `Mockery context = new JUniut4Mocker(); ActionEventListener listener=context.mock(ActionEventListener.class)` でActionEventListenerのモックが作れる
+  - `context.checking(new Expectations(){{ oneOf(listener).auctionClosed()}});` でauctionCloseイベントが一回呼ばれたことを期待
+
+### 第二部
+#### 第四章「テスト駆動のサイクルに火を入れる」
+- プロジェクト開始直後からデプロイとテストを行うべし。つまり、動くスケルトンをつかってビルド・デプロイ・テストが機能することを確かめる。
+- 動くスケルトン＝実際の機能をできる限り薄くスライスしたものの実装。ビルド・デプロイ・エンドツーエンドのテストを自動化できなければならない。
+- 疑似本番環境にデプロイし、その上でテストするところまでやる。
+  - そもそもデプロイは自動化すべきで、本番の前にデプロイスクリプトも徹底的に試すべきである
+  - デプロイのタイミングこそが運用を学ぶタイミングである。DBセットアップにワークフローが必要…みたいな話も事前に知れる。
+- 動くスケルトンの形を定める
+  - アプリケーションの抽象的な構造を決める。詳細化は不要。ホワイトボードに数分でかけるもの
+  - 動くスケルトンのポイントは、最初のテストを書くことでプロジェクトのコンテキストを書き出すこと。
